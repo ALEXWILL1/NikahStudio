@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use illumante\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -49,4 +50,27 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             /* @end-chisel-2fa */
         ];
     }
+
+    public function invitations(): HasMany
+{
+    return $this->hasMany(Invitation::class);
+}
+
+public function subscriptions(): HasMany
+{
+    return $this->hasMany(Subscription::class);
+}
+
+public function mediaAssets(): HasMany
+{
+    return $this->hasMany(MediaAsset::class);
+}
+
+public function adminActivityLogs(): HasMany
+{
+    return $this->hasMany(
+        AdminActivityLog::class,
+        'actor_user_id'
+    );
+}
 }
