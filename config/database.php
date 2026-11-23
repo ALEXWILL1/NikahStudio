@@ -64,6 +64,27 @@ return [
             ]) : [],
         ],
 
+        // Read-only source connection used only during the one-time MySQL to PostgreSQL migration.
+        'mysql_source' => [
+            'driver' => 'mysql',
+            'url' => env('MYSQL_SOURCE_URL'),
+            'host' => env('MYSQL_SOURCE_HOST', '127.0.0.1'),
+            'port' => env('MYSQL_SOURCE_PORT', '3306'),
+            'database' => env('MYSQL_SOURCE_DATABASE', 'nikahstudio'),
+            'username' => env('MYSQL_SOURCE_USERNAME', 'root'),
+            'password' => env('MYSQL_SOURCE_PASSWORD', ''),
+            'unix_socket' => env('MYSQL_SOURCE_SOCKET', ''),
+            'charset' => env('MYSQL_SOURCE_CHARSET', 'utf8mb4'),
+            'collation' => env('MYSQL_SOURCE_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                Mysql::ATTR_SSL_CA => env('MYSQL_SOURCE_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
