@@ -1,36 +1,30 @@
 import { Head } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { dashboard } from '@/routes';
 
-export default function Dashboard() {
+type DashboardProps = {
+    name: string;
+    role: 'admin' | 'client';
+};
+
+export default function Dashboard({ name, role }: DashboardProps) {
+    const isAdmin = role === 'admin';
+    const title = isAdmin ? 'Dashboard Admin' : 'Undangan Saya';
+
     return (
         <>
-            <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-            </div>
+            <Head title={title} />
+            <main className="flex-1 bg-[#faf6ee] p-6 text-[#30271e] sm:p-8">
+                <section className="rounded-2xl border border-[#e9dbc2] bg-white p-6 sm:p-8">
+                    <p className="text-sm font-medium text-[#76582e]">
+                        {title}
+                    </p>
+                    <h1 className="mt-2 text-3xl font-semibold">Halo, {name}</h1>
+                    <p className="mt-3 text-sm text-[#625548]">
+                        {isAdmin
+                            ? 'Panel pengelolaan NikahStudio.'
+                            : 'Kelola undangan pernikahanmu di NikahStudio.'}
+                    </p>
+                </section>
+            </main>
         </>
     );
 }
-
-Dashboard.layout = {
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: dashboard(),
-        },
-    ],
-};
