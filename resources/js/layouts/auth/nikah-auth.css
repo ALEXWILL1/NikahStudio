@@ -1,0 +1,56 @@
+.nikah-auth {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 52% 48%;
+    min-height: 100svh;
+    background: #f8f1e5;
+    color: #402e25;
+    color-scheme: light;
+}
+.nikah-photo {
+    position: absolute;
+    z-index: -1;
+    inset: 0 28% 0 0;
+    background: linear-gradient(180deg, #29170fd9, transparent 34%, transparent 56%, #29170ff0),
+        url('./wedding.png') center / cover, #523b2d;
+    mask-image: linear-gradient(95deg, black 53%, transparent 99%);
+}
+.nikah-cover { display: flex; flex-direction: column; justify-content: space-between; padding: clamp(2rem, 4vw, 5rem); }
+.nikah-brand { display: flex; gap: .7rem; align-items: center; font: 1.7rem Georgia, serif; color: #fff9eb; }
+.nikah-brand span { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border: 1px solid #eac67a; border-radius: 50%; color: #ffe3a4; }
+.nikah-caption { margin: 0; color: #fff9eb; font: clamp(3rem, 5vw, 6rem)/1.04 Georgia, serif; letter-spacing: -.045em; }
+.nikah-caption i { color: #ffdf9e; }
+.nikah-panel { display: grid; place-items: center; padding: 3rem clamp(1.5rem, 4vw, 5rem); }
+.nikah-form { width: 100%; max-width: 26rem; }
+.nikah-ornament { display: flex; align-items: center; gap: .5rem; margin-bottom: 1.4rem; }
+.nikah-ornament b { width: 3rem; height: 1px; background: #a27b37; }
+.nikah-ornament i { width: .85rem; height: .45rem; background: #74815d; border-radius: 100% 0; transform: rotate(-13deg); }
+.nikah-form h1 { color: #483022; font: clamp(2.25rem, 3.4vw, 3.75rem)/1.05 Georgia, serif; letter-spacing: -.045em; margin-bottom: .7rem; }
+.nikah-description { color: #685346; margin-bottom: 2rem; line-height: 1.55; }
+.nikah-form a { color: #67432f !important; text-decoration: underline; text-underline-offset: .2em; }
+.nikah-form button[type=submit] { background: #593b2b; color: white; border-radius: .7rem; }
+.nikah-form button[type=submit]:hover { background: #432d22; }
+.nikah-form button[data-slot=button]:not([type=submit]) { background: #fffbf3; color: #533929; border: 1px solid #beac91; }
+.nikah-form input:not([type=checkbox]):not([type=hidden]) { background: #fffcf7; color: #36261e; border-color: #bda991; }
+.nikah-form .bg-background, .nikah-form .bg-card { background-color: #f8f1e5; }
+.nikah-form .text-muted-foreground { color: #68574c; }
+.nikah-form :focus-visible { outline: 2px solid #6d764a; outline-offset: 3px; }
+@media (max-width: 800px) {
+    .nikah-auth { grid-template-columns: 1fr; align-content: start; }
+    .nikah-photo { inset: 0 0 auto; height: 16rem; background-position: center 46%; mask-image: linear-gradient(black 48%, transparent); }
+    .nikah-cover { padding: 1.6rem; min-height: 14rem; }
+    .nikah-caption { display: none; }
+    .nikah-panel { padding: 0 1.5rem 3rem; }
+}
+
+.nikah-caption {
+    max-width: 13ch;
+    color: #ffdf9e;
+    font-style: italic;
+}
+
+.nikah-caption::first-line {
+    color: #fff9eb;
+    font-style: normal;
+}
