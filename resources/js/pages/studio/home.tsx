@@ -4,6 +4,10 @@ import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronLeft, ChevronRight, Fold
 import { Canvas, api, message, path } from '../../studio/design';
 import type { Section } from '../../studio/design';
 
+import sprig from './visual/ranting.svg';
+import heroPhoto from './visual/hero-daun.webp';
+import './visual/beranda.css';
+
 type Screen = 'home'|'projects'|'templates'|'create';
 type Template = {id:number; name:string; category:string; tier:string; allowed:boolean; samples:Section[]};
 type Invitation = {id:number; title:string; published:boolean; url:string; rsvps:number; edited?:string; cover:Section|null};
@@ -66,13 +70,18 @@ export default function Home({owner,screen,templates,invitations,limit}:Props) {
     const featuredNames = ['Floral Ivory','Pusaka Toba','Hortensia Biru','Kebun Senja'];
     const featured = [...templates].sort((a,b)=>(featuredNames.includes(a.name)?featuredNames.indexOf(a.name):4)-(featuredNames.includes(b.name)?featuredNames.indexOf(b.name):4));
     return <div className={'ns at-dashboard'+(small?' trimmed':'')}><Head title={pages[screen][1]}/>
-        <aside className="at-side"><Link className="at-logo" href={pages.home[0]} aria-label="NikahStudio"><b>N</b><span>NikahStudio</span></Link>
+        <aside className="at-side"><img className="nk-side-leaves" src={sprig} alt="" aria-hidden="true"/><Link className="at-logo" href={pages.home[0]} aria-label="NikahStudio"><b className="nk-monogram">N<svg viewBox="0 0 26 34" aria-hidden="true"><path d="M3 32Q16 18 22 2" fill="none" stroke="currentColor"/><path d="M8 24Q1 18 5 12Q12 15 8 24M12 20Q21 20 25 12Q16 11 12 20M16 14Q9 10 13 4Q19 7 16 14M19 9Q26 8 25 1Q20 2 19 9" fill="currentColor"/></svg></b><span>NikahStudio</span></Link>
             <nav>{(['create','home','projects','templates'] as const).map(k=>{const [href,label,Icon]=pages[k];return <Link key={k} href={href} title={label} aria-label={label} aria-current={k===screen?'page':undefined} className={'at-nav '+k}><Icon/><span>{label}</span></Link>;})}</nav>
             <div className="at-lower"><button className="at-nav at-collapse" aria-expanded={!small} title="Ubah ukuran menu" onClick={()=>{setSmall(!small);localStorage.setItem('nikah-menu',small?'penuh':'ringkas');}}><PanelLeftClose/><span>Ringkas menu</span></button>
-            <Link href="/settings/profile" className="at-nav" title="Akun saya" aria-label="Akun saya"><Settings/><span>Akun saya</span></Link>
-            <Link as="button" href="/logout" method="post" className="at-nav" title="Keluar" aria-label="Keluar"><LogOut/><span>Keluar</span></Link></div>
+            <details className="nk-account">
+                <summary className="at-nav" aria-label="Menu akun"><b>{owner.slice(0,1).toUpperCase()}</b><span>{owner}</span></summary>
+                <div className="nk-account-links">
+                    <Link href="/settings/profile" className="at-nav"><Settings/> Akun saya</Link>
+                    <Link as="button" href="/logout" method="post" className="at-nav"><LogOut/> Keluar</Link>
+                </div>
+            </details></div>
         </aside>
-        <main className={'at-main '+(screen==='home'?'at-landing':'')} key={screen}><header className="at-top"><strong>{screen==='home'?'Studio '+owner:pages[screen][1]}</strong>{screen==='home' && <label className="at-header-search"><Search size={16}/><input type="search" placeholder="Cari undangan atau template" aria-label="Cari undangan atau template" value={query} onChange={e=>setQuery(e.target.value)}/></label>}<Link href="/settings/profile" title="Akun saya" aria-label="Akun saya">{owner.slice(0,1).toUpperCase()}</Link></header>
+        <main className={'at-main '+(screen==='home'?'at-landing':'')} key={screen}>{screen==='home' && <div className="nk-scene" aria-hidden="true"><img src={heroPhoto} alt="" fetchPriority="high"/></div>}<header className="at-top"><strong>{screen==='home'?'Workspace '+owner:pages[screen][1]}</strong>{screen==='home' && <label className="at-header-search"><Search size={16}/><input type="search" placeholder="Cari undangan atau template" aria-label="Cari undangan atau template" value={query} onChange={e=>setQuery(e.target.value)}/></label>}<Link href="/settings/profile" title="Akun saya" aria-label="Akun saya">{owner.slice(0,1).toUpperCase()}</Link></header>
         {screen==='home'&&<>
             <section className="at-welcome">
                 <h1>Selamat datang, {owner}.</h1>
