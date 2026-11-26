@@ -1,12 +1,22 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronLeft, ChevronRight, FolderOpen, Home as HomeIcon, LayoutGrid, LogOut, PanelLeftClose, Plus, Search, Settings } from 'lucide-react';
 import { Canvas, api, message, path } from '../../studio/design';
 import type { Section } from '../../studio/design';
 
 import sprig from './visual/ranting.svg';
-import heroPhoto from './visual/hero-daun.webp';
+import book1 from './visual/floral-ivory.webp';
+import book2 from './visual/pusaka-toba.webp';
+import book3 from './visual/hortensia-biru.webp';
+import book4 from './visual/kebun-senja.webp';
 import './visual/beranda.css';
+
+const album = [
+    { name: 'Floral Ivory', photo: book1 },
+    { name: 'Pusaka Toba', photo: book2 },
+    { name: 'Hortensia Biru', photo: book3 },
+    { name: 'Kebun Senja', photo: book4 },
+];
 
 type Screen = 'home'|'projects'|'templates'|'create';
 type Template = {id:number; name:string; category:string; tier:string; allowed:boolean; samples:Section[]};
@@ -57,9 +67,30 @@ function Create({choice, full}:{choice:Template|undefined;full:boolean}) {
 }
 
 export default function Home({owner,screen,templates,invitations,limit}:Props) {
-    const {url}=usePage();
+    const { url } = usePage();
     const params=new URL(url,'http://localhost').searchParams;
     const choice=templates.find(t=>String(t.id)===params.get('template'));
+    const [slide, setSlide] = useState(0);
+    const [playing, setPlaying] = useState(false);
+    const swipe = useRef<{x:number; y:number} | null>(null);
+    useEffect(() => {
+        const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const apply = () => setPlaying(!motion.matches);
+        apply();
+        motion.addEventListener('change', apply);
+        return () => motion.removeEventListener('change', apply);
+    }, []);
+    useEffect(() => {
+        if (!playing || screen !== 'home') return;
+        const timer = window.setInterval(() => {
+            if (!document.hidden) setSlide(current => (current + 1) % album.length);
+        }, 6500);
+        return () => window.clearInterval(timer);
+    }, [playing, screen]);
+    function step(direction:number) {
+        setPlaying(false);
+        setSlide(current => (current + direction + album.length) % album.length);
+    }
     const [small,setSmall]=useState(false),[query,setQuery]=useState(''),[filter,setFilter]=useState('Semua');
     useEffect(()=>{setSmall(localStorage.getItem('nikah-menu')==='ringkas');},[]);
     useEffect(()=>{setQuery('');setFilter('Semua');},[screen]);
@@ -81,7 +112,26 @@ export default function Home({owner,screen,templates,invitations,limit}:Props) {
                 </div>
             </details></div>
         </aside>
-        <main className={'at-main '+(screen==='home'?'at-landing':'')} key={screen}>{screen==='home' && <div className="nk-scene" aria-hidden="true"><img src={heroPhoto} alt="" fetchPriority="high"/></div>}<header className="at-top"><strong>{screen==='home'?'Workspace '+owner:pages[screen][1]}</strong>{screen==='home' && <label className="at-header-search"><Search size={16}/><input type="search" placeholder="Cari undangan atau template" aria-label="Cari undangan atau template" value={query} onChange={e=>setQuery(e.target.value)}/></label>}<Link href="/settings/profile" title="Akun saya" aria-label="Akun saya">{owner.slice(0,1).toUpperCase()}</Link></header>
+        <main className={'at-main '+(screen==='home'?'at-landing':'')} key={screen}
+            onTouchStart={event=>{
+                swipe.current = null;
+                if (screen !== 'home' || event.touches.length !== 1 || (event.target as Element).closest('button,a,input')) return;
+                const touch=event.touches[0];
+                const bounds=event.currentTarget.querySelector('.nk-scene')?.getBoundingClientRect();
+                if(bounds && touch.clientY >= bounds.top && touch.clientY <= bounds.bottom) swipe.current={x:touch.clientX,y:touch.clientY};
+            }}
+            onTouchCancel={()=>{swipe.current=null;}}
+            onTouchEnd={event=>{
+                const start=swipe.current;
+                swipe.current=null;
+                if(!start || !event.changedTouches.length) return;
+                const dx=event.changedTouches[0].clientX-start.x;
+                const dy=event.changedTouches[0].clientY-start.y;
+                if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)*1.5) step(dx<0?1:-1);
+            }}>
+            {screen==='home' && <div className="nk-scene nk-album" aria-hidden="true">
+                {album.map((book,index)=><img key={book.name} src={book.photo} alt="" className={index===slide?'shown':''} fetchPriority={index===0?'high':'auto'}/>)}
+            </div>}<header className="at-top"><strong>{screen==='home'?'Workspace '+owner:pages[screen][1]}</strong>{screen==='home' && <label className="at-header-search"><Search size={16}/><input type="search" placeholder="Cari undangan atau template" aria-label="Cari undangan atau template" value={query} onChange={e=>setQuery(e.target.value)}/></label>}<Link href="/settings/profile" title="Akun saya" aria-label="Akun saya">{owner.slice(0,1).toUpperCase()}</Link></header>
         {screen==='home'&&<>
             <section className="at-welcome">
                 <h1>Selamat datang, {owner}.</h1>
@@ -89,6 +139,12 @@ export default function Home({owner,screen,templates,invitations,limit}:Props) {
                 <h2>{recent?.title ?? 'Undangan pertamamu'}</h2>
                 <p>{recent ? (recent.edited?'Terakhir diedit '+recent.edited:'Undangan terakhir dibuka') : 'Pilih template atau mulai dari halaman kosong.'}</p>
                 <Link className="at-resume" href={recent?path(recent.id):pages.create[0]}>{recent?'Lanjutkan edit':'Buat undangan'} <ArrowRight size={17}/></Link>
+                <div className="nk-album-controls" role="group" aria-label="Galeri foto buku undangan">
+                    <button type="button" onClick={()=>step(-1)} aria-label="Foto sebelumnya"><ChevronLeft size={16}/></button>
+                    <span aria-live={playing?'off':'polite'}>{album[slide].name}</span>
+                    <button type="button" onClick={()=>step(1)} aria-label="Foto berikutnya"><ChevronRight size={16}/></button>
+                    <button type="button" onClick={()=>setPlaying(value=>!value)}>{playing?'Jeda':'Putar'}</button>
+                </div>
             </section>
             <div className="at-heading"><h2>{normalized?'Template yang cocok':'Jelajahi template'}</h2><Link href={pages.templates[0]}>Lihat semua <ArrowRight/></Link></div>
             <div className="at-grid">{(normalized?filtered:featured.slice(0,4)).map(t=><TemplateCard key={t.id} template={t}/>)}</div>
