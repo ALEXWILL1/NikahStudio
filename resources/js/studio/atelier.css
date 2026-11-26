@@ -58,3 +58,31 @@
 @media(max-width:980px){.at-dashboard{grid-template-columns:168px minmax(0,1fr)}.at-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.at-paper{right:7%}}
 @media(max-width:720px){.at-dashboard,.at-dashboard.trimmed{display:block}.at-side{position:static;height:auto;padding:10px 14px;gap:10px;flex-direction:row;align-items:center;justify-content:space-between}.at-logo{font-size:0}.at-logo span,.at-side .at-nav span,.at-collapse,.at-side .at-collapse{display:none}.at-side nav,.at-lower{display:flex;margin:0;gap:3px}.at-side .at-nav{padding:8px}.at-side .at-nav.create{margin:0}.at-main{padding:0 15px 30px}.at-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.at-top{min-height:50px}.at-paper{width:92px;right:3%;opacity:.85}.at-hero{min-height:210px;padding:20px}.at-hero>div:first-child{max-width:67%}.at-hero h1{font-size:2.25rem}.at-hero a{font-size:.8rem}.at-create{grid-template-columns:1fr}.at-proof>.ns-canvas{max-width:220px}.ns-work .at-palette{display:block}.at-palette>*{margin-bottom:8px}.at-swatches{grid-template-columns:repeat(4,minmax(0,1fr))}.at-heading{flex-wrap:wrap}.at-card-meta{align-items:flex-start}.at-tabs{grid-template-columns:repeat(4,1fr)}}
 @media(prefers-reduced-motion:reduce){.ns *,.ns *::before,.ns *::after{transition:none!important;animation:none!important}}
+
+.ns-art-layer{display:block;mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat}
+.ns-art-layer img{display:block}
+.at-dashboard{--cream:#faf1e5;--gutter:clamp(20px,3.4vw,62px);background:var(--cream)}
+.at-side{z-index:1;overflow:visible;isolation:isolate;background:linear-gradient(120deg,#311b13,#513524 72%,#765438)}
+.at-side::after{content:'';position:absolute;inset:0 -32px 0 auto;width:32px;background:linear-gradient(90deg,#593c29bb,transparent);pointer-events:none}
+.at-side .at-logo{flex-direction:column;align-items:center;color:#fff3db;gap:0;font-size:28px}
+.at-logo b{border:0;font:48px Georgia,serif;color:#edca82;height:auto;line-height:1.2}
+.at-side .at-nav.create{background:linear-gradient(110deg,#edc67c,#e4b461)}
+.at-main{max-width:none;margin:0;padding-inline:var(--gutter)}
+.at-landing{position:relative;isolation:isolate;background-color:var(--cream)}
+.at-landing::before,.at-landing::after{position:absolute;content:'';pointer-events:none;z-index:-1}
+.at-landing::before{inset:0 0 auto;height:clamp(390px,36vw,560px);background:linear-gradient(0deg,var(--cream),transparent 34%),linear-gradient(90deg,#fcf2e9e8 0%,#fcf2e99c 30%,transparent 62%),url('/nikahstudio/latar/studio-hero.webp') center 54%/cover}
+.at-landing::after{inset:390px 0 0;opacity:.11;background:url('/nikahstudio/ornamen/olive.webp') right -65px top 10px/190px auto no-repeat,url('/nikahstudio/ornamen/jasmine.webp') left -70px bottom/230px auto no-repeat}
+.at-top{gap:12px}.at-top strong{margin-right:auto;font:clamp(18px,2vw,27px) Georgia,serif;color:#472e21}
+.at-main .at-header-search{display:flex;align-items:center;gap:9px;padding:0 14px;border:1px solid #bca788;border-radius:30px;background:#fff8eecf;width:min(36%,330px)}
+.at-header-search input[type=search]{border:0;background:transparent;padding:7px 0;min-width:0}
+.at-welcome{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:clamp(300px,24vw,400px);max-width:57%;gap:12px}
+.at-welcome h1{font-size:clamp(24px,2.65vw,42px);letter-spacing:-.025em;margin:0}
+.at-status{font-size:11px;text-transform:uppercase;letter-spacing:.09em;background:#eed0a4;border-radius:9px;padding:3px 10px}
+.at-welcome h2{font-size:clamp(34px,4vw,66px);margin:0;overflow-wrap:anywhere}
+.at-welcome p{margin:0;color:#63503f}
+.ns .at-resume{display:inline-flex;align-items:center;gap:12px;color:#fff4df;background:#50301e;border-radius:10px;padding:10px 18px}
+.at-card-print{padding:0}.at-card-print .ns-canvas{width:100%;box-shadow:none}.at-card-meta{justify-content:center;text-align:center}.at-card-meta small,.at-landing .at-card-meta span{display:none}
+@media(max-width:720px){.at-side::after{display:none}.at-side .at-logo{font-size:0}.at-logo b{font-size:28px}.at-main{padding-inline:16px}.at-main .at-header-search{width:46%;padding-inline:7px}.at-header-search input{font-size:12px}.at-welcome{max-width:78%;min-height:290px}.at-landing::before{height:360px;background-position:center,center,64% center}.at-welcome h2{font-size:34px}}
+
+.ns-colors{display:flex;flex-wrap:wrap;gap:6px}.ns .ns-colors button{width:24px;height:24px;padding:0;border-radius:50%;border:1px solid #9f907d}
+@media(min-width:721px){.at-side{background:linear-gradient(90deg,#3d251a,#4b3122 80%,#674b37)}.at-side::after{background:linear-gradient(90deg,#674b37,rgba(103,75,55,.52) 40%,transparent)}}

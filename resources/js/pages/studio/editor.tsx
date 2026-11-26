@@ -8,7 +8,7 @@ import type { Item, Section } from '../../studio/design';
 type Document = {title:string; sections:Section[]};
 type Props = Document & { id:number; photos:number[]; published:boolean; revision:number; url:string };
 const kinds:Record<string,string>={custom:'Halaman bebas',cover:'Sampul',couple:'Pasangan',event:'Acara & lokasi',gallery:'Galeri',rsvp:'RSVP'};
-const fonts = ['Georgia','Garamond','Arial','Verdana','monospace','cursive'];
+const fonts = ['Georgia','Garamond','Arial','Verdana','monospace','cursive','Palatino Linotype','Book Antiqua','Times New Roman','Trebuchet MS','Courier New','Segoe UI','Cambria','Candara','Brush Script MT'];
 export default function Editor(props:Props) {
     const [doc,setDoc]=useState<Document>({title:props.title,sections:props.sections});
     const [page,setPage]=useState(props.sections[0].id), [selected,select]=useState(''), [preview,setPreview]=useState(false);
@@ -116,7 +116,13 @@ export default function Editor(props:Props) {
         <label>Warna latar<input type="color" value={section.bg} onChange={e=>updateSection({bg:e.target.value})}/></label>
         <h3>Lapisan</h3><select aria-label="Pilih elemen" value={item?.id??''} onChange={e=>select(e.target.value)}><option value="">Pilih elemen…</option>{section.items.map((i,n)=><option key={i.id} value={i.id}>{n+1}. {i.type==='text'?i.value:i.type==='photo'?'Foto':illustrations[i.value]||i.value}</option>)}</select>
         {item && <>{item.type==='text' && <><label>Teks<textarea value={item.value??''} maxLength={1500} onChange={e=>updateItem({value:e.target.value})}/></label><label>Font<select value={item.font} onChange={e=>updateItem({font:e.target.value})}>{fonts.map(f=><option key={f}>{f}</option>)}</select></label></>}
-        {(item.type==='text'||item.type==='shape') && <label>Warna elemen<input type="color" value={item.color} onChange={e=>updateItem({color:e.target.value})}/></label>}
+        {(item.type==='text'||item.type==='shape'||item.type==='illustration') && <label>Warna elemen<input type="color" value={item.color} onChange={e=>updateItem({color:e.target.value,...(item.type==='illustration'?{tint:true}:{})})}/></label>}
+        {item.type!=='photo' && <div className="ns-colors" aria-label="Palet warna">{Object.entries({
+            Cokelat:'#563826', Krem:'#fff2d9', Emas:'#c79845', Zaitun:'#586745', Merlot:'#792f46',
+            Hortensia:'#7495b4', Terakota:'#b3674e', Arang:'#302c28',
+        }).map(([label,color])=><button key={color} title={label} aria-label={'Warna '+label} style={{backgroundColor:color}} onClick={()=>updateItem({color,...(item.type==='illustration'?{tint:true}:{})})}/>)}</div>}
+        {item.type==='illustration' && item.tint && <button onClick={()=>updateItem({tint:false})}>Kembalikan warna asli</button>}
+        {item.type==='shape' && <button aria-pressed={!!item.filled} onClick={()=>updateItem({filled:!item.filled})}>Isi warna bentuk</button>}
         {item.type==='photo' && <label>Bingkai<select value={item.frame} onChange={e=>updateItem({frame:e.target.value})}>{Object.entries({soft:'Sudut lembut',square:'Persegi',arch:'Lengkung',round:'Lingkaran'}).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></label>}
         {([['w','Lebar',4,100],['size','Ukuran teks',2,20],['angle','Rotasi',-180,180],['x','Posisi horizontal',0,99],['y','Posisi vertikal',0,99]] as const).filter(([k])=>k!=='size'||item.type==='text').map(([k,label,min,max])=><label key={k}>{label} · {Math.round(item[k])}<input type="range" min={min} max={max} value={item[k]} onChange={e=>updateItem({[k]:Number(e.target.value)})}/></label>)}
         <button onClick={()=>updateSection({items:[...section.items.filter(i=>i.id!==item.id),item]})}>Ke depan</button><button onClick={()=>updateSection({items:[item,...section.items.filter(i=>i.id!==item.id)]})}>Ke belakang</button>

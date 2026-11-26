@@ -38,6 +38,26 @@ class InvitationDesign
             default => ['mawar','arch',$bg,$colors['text'] ?? '#52392c','ivory','jasmine','Georgia'],
         };
 
+        $prints = [
+            'floral-ivory' => ['#473424', 'Georgia'],
+            'pusaka-toba' => ['#fff1d4', 'Garamond'],
+            'hortensia-biru' => ['#473424', 'Palatino Linotype'],
+            'kebun-senja' => ['#fff1d4', 'Book Antiqua'],
+            'zaitun-toscana' => ['#473424', 'Georgia'],
+            'anggrek-amerta' => ['#fff1d4', 'Garamond'],
+            'gerbang-bali' => ['#473424', 'Palatino Linotype'],
+            'rembulan-malam' => ['#fff1d4', 'Book Antiqua'],
+            'peoni-merah' => ['#473424', 'Georgia'],
+            'art-deco-emas' => ['#473424', 'Garamond'],
+            'taman-tropis' => ['#473424', 'Palatino Linotype'],
+            'wisteria-pagi' => ['#473424', 'Book Antiqua'],
+        ];
+        if (isset($prints[$template->view_key])) {
+            $photo = $template->view_key;
+            [$ink, $font] = $prints[$photo];
+            $mode = 'print';
+        }
+
         $text = fn ($value, $y, $size, $color = null) =>
             self::item('text', $value, 7, $y, 86, $size, $color ?? $ink, $font);
         $art = fn ($name, $x, $y, $w) =>
@@ -47,6 +67,8 @@ class InvitationDesign
 
         $name = $first.' & '.$second;
         $cover = match ($mode) {
+            'print' => [$text('UNDANGAN PERNIKAHAN', 34, 3), $text($name, 43, 9),
+                $text('Dengan penuh sukacita', 62, 3)],
             'full' => [$art($secondary, 7, 5, 24), $text('THE WEDDING OF', 48, 3),
                 $text($name, 56, 9), $art($flower, 65, 75, 32)],
             'band' => [$text('UNDANGAN PERNIKAHAN', 8, 3), $text($name, 17, 8),
@@ -69,7 +91,7 @@ class InvitationDesign
                 $text('Tanggal dan waktu acara', 46, 4, $dark), $text('Nama tempat dan alamat', 57, 4, $dark),
                 $art($flower, 59, 73, 38),
             ],'zaitun','faded'),
-            $panel('gallery','Galeri',$paper,[$text('Galeri kami', 9, 8),
+            $panel('gallery','Galeri',$mode === 'print' ? '#f7efdf' : $paper,[$text('Galeri kami', 9, 8, $mode === 'print' ? $dark : $ink),
                 $art($secondary, 37, 77, 26)],$photo,'band'),
             $panel('rsvp','Konfirmasi kehadiran','#f9f2e4',[$art($flower, 31, 9, 38),
                 $text('Kami menantikan kehadiranmu', 53, 7, $dark), $text($name, 78, 4, $dark)],

@@ -37,7 +37,7 @@ class InvitationStudioController extends Controller
                 'category' => $t->category, 'samples' => InvitationDesign::make($t, 'Alya', 'Raka'),
             ]),
             'invitations' => $list->map(fn ($i) => [
-                'id' => $i->id, 'title' => $i->title, 'published' => isset($i->settings['studio_live']),
+                'edited' => $i->updated_at?->format('d/m/Y'), 'id' => $i->id, 'title' => $i->title, 'published' => isset($i->settings['studio_live']),
                 'url' => route('studio.guest', $i->slug), 'rsvps' => $i->rsvps_count,
                 'cover' => $i->settings['studio_draft'][0] ?? null,
             ]),
@@ -80,7 +80,7 @@ class InvitationStudioController extends Controller
     {
         $i = $this->owned($request, $invitation);
         return Inertia::render('studio/editor', [
-            'id' => $i->id, 'title' => $i->title, 'sections' => $i->settings['studio_draft'] ?? InvitationDesign::make($i->template, $i->partner_1_name, $i->partner_2_name),
+            'edited' => $i->updated_at?->format('d/m/Y'), 'id' => $i->id, 'title' => $i->title, 'sections' => $i->settings['studio_draft'] ?? InvitationDesign::make($i->template, $i->partner_1_name, $i->partner_2_name),
             'revision' => $i->settings['studio_revision'] ?? 0, 'published' => isset($i->settings['studio_live']),
             'url' => route('studio.guest', $i->slug), 'photos' => $i->mediaAssets()->where('file_type', 'image')->pluck('media_assets.id'),
         ]);
@@ -99,14 +99,15 @@ class InvitationStudioController extends Controller
             'revision' => 'required|integer|min:0', 'title' => 'required|string|max:150',
             'sections' => 'required|array|list|min:1|max:24', 'sections.*' => 'array:id,label,kind,bg,items,backdrop,treatment',
             'sections.*.id' => 'required|uuid|distinct', 'sections.*.kind' => 'required|in:cover,couple,event,gallery,rsvp,custom',
-            'sections.*.backdrop' => 'sometimes|nullable|in:mawar,rimba,toba,beludru,hortensia,senja,zaitun,lilin,cincin',
-            'sections.*.treatment' => 'sometimes|in:full,arch,band,oval,faded',
+            'sections.*.backdrop' => 'sometimes|nullable|in:mawar,rimba,toba,beludru,hortensia,senja,zaitun,lilin,cincin,floral-ivory,pusaka-toba,hortensia-biru,kebun-senja,zaitun-toscana,anggrek-amerta,gerbang-bali,rembulan-malam,peoni-merah,art-deco-emas,taman-tropis,wisteria-pagi',
+            'sections.*.treatment' => 'sometimes|in:full,arch,band,oval,faded,print',
             'sections.*.label' => 'required|string|max:80', 'sections.*.bg' => $hex, 'sections.*.items' => 'present|array|list|max:60',
-            'sections.*.items.*' => 'array:id,type,value,x,y,w,size,color,font,angle,frame',
+            'sections.*.items.*' => 'array:id,type,value,x,y,w,size,color,font,angle,frame,tint,filled',
             $item.'id' => 'required|uuid|distinct', $item.'type' => 'required|in:text,photo,shape,illustration',
-            $item.'value' => 'present|nullable|string|max:1500', $item.'font' => 'required|in:Georgia,Garamond,Arial,Verdana,monospace,cursive',
+            $item.'value' => 'present|nullable|string|max:1500', $item.'font' => 'required|in:Georgia,Garamond,Arial,Verdana,monospace,cursive,Palatino Linotype,Book Antiqua,Times New Roman,Trebuchet MS,Courier New,Segoe UI,Cambria,Candara,Brush Script MT',
             $item.'x' => 'required|numeric|between:0,99', $item.'y' => 'required|numeric|between:0,99',
             $item.'w' => 'required|numeric|between:4,100', $item.'size' => 'required|numeric|between:2,20',
+            $item.'tint' => 'sometimes|boolean', $item.'filled' => 'sometimes|boolean',
             $item.'angle' => 'required|numeric|between:-180,180', $item.'color' => $hex, $item.'frame' => 'required|in:soft,arch,round,square',
         ]);
         foreach ($data['sections'] as $section) {
@@ -115,7 +116,7 @@ class InvitationStudioController extends Controller
                     'ivory','olive','scroll','hydrangea','house','palm','peony','wreath','rings','jasmine','orchid','arch',
                 ], true), 422, 'Ilustrasi tidak tersedia.');
                 abort_if($element['type'] === 'shape' && ! in_array($element['value'], [
-                    'branch', 'tree', 'flower', 'diamond', 'circle', 'square', 'line',
+                    'branch', 'tree', 'flower', 'diamond', 'circle', 'square', 'line', 'heart', 'star', 'sparkles', 'leaf', 'clover', 'sun', 'moon', 'shell', 'crown', 'mountain', 'triangle', 'hexagon',
                 ], true), 422, 'Pilih ornamen yang tersedia.');
             }
         }

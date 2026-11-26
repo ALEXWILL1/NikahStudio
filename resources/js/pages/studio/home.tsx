@@ -6,7 +6,7 @@ import type { Section } from '../../studio/design';
 
 type Screen = 'home'|'projects'|'templates'|'create';
 type Template = {id:number; name:string; category:string; tier:string; allowed:boolean; samples:Section[]};
-type Invitation = {id:number; title:string; published:boolean; url:string; rsvps:number; cover:Section|null};
+type Invitation = {id:number; title:string; published:boolean; url:string; rsvps:number; edited?:string; cover:Section|null};
 type Props = {owner:string; screen:Screen; templates:Template[]; invitations:Invitation[]; limit:number};
 const pages = {
     home: ['/client/dashboard','Beranda',HomeIcon],
@@ -62,6 +62,9 @@ export default function Home({owner,screen,templates,invitations,limit}:Props) {
     const normalized=query.toLocaleLowerCase().trim();
     const filtered=templates.filter(t=>t.name.toLocaleLowerCase().includes(normalized)&&(filter==='Semua'||(categories[t.category]??'Koleksi')===filter));
     const projects=invitations.filter(i=>i.title.toLocaleLowerCase().includes(normalized));
+    const recent = invitations[0];
+    const featuredNames = ['Floral Ivory','Pusaka Toba','Hortensia Biru','Kebun Senja'];
+    const featured = [...templates].sort((a,b)=>(featuredNames.includes(a.name)?featuredNames.indexOf(a.name):4)-(featuredNames.includes(b.name)?featuredNames.indexOf(b.name):4));
     return <div className={'ns at-dashboard'+(small?' trimmed':'')}><Head title={pages[screen][1]}/>
         <aside className="at-side"><Link className="at-logo" href={pages.home[0]} aria-label="NikahStudio"><b>N</b><span>NikahStudio</span></Link>
             <nav>{(['create','home','projects','templates'] as const).map(k=>{const [href,label,Icon]=pages[k];return <Link key={k} href={href} title={label} aria-label={label} aria-current={k===screen?'page':undefined} className={'at-nav '+k}><Icon/><span>{label}</span></Link>;})}</nav>
@@ -69,14 +72,20 @@ export default function Home({owner,screen,templates,invitations,limit}:Props) {
             <Link href="/settings/profile" className="at-nav" title="Akun saya" aria-label="Akun saya"><Settings/><span>Akun saya</span></Link>
             <Link as="button" href="/logout" method="post" className="at-nav" title="Keluar" aria-label="Keluar"><LogOut/><span>Keluar</span></Link></div>
         </aside>
-        <main className="at-main" key={screen}><header className="at-top"><span>Studio <i>/</i> {pages[screen][1]}</span><Link href="/settings/profile" title="Akun saya" aria-label="Akun saya">{owner.slice(0,1).toUpperCase()}</Link></header>
+        <main className={'at-main '+(screen==='home'?'at-landing':'')} key={screen}><header className="at-top"><strong>{screen==='home'?'Studio '+owner:pages[screen][1]}</strong>{screen==='home' && <label className="at-header-search"><Search size={16}/><input type="search" placeholder="Cari undangan atau template" aria-label="Cari undangan atau template" value={query} onChange={e=>setQuery(e.target.value)}/></label>}<Link href="/settings/profile" title="Akun saya" aria-label="Akun saya">{owner.slice(0,1).toUpperCase()}</Link></header>
         {screen==='home'&&<>
-            <section className="at-hero"><div><p>Halo, {owner}</p><h1>Studio <em>undangan</em></h1><Link href={pages.templates[0]}>Jelajahi template <ArrowRight size={16}/></Link></div>
-                <div className="at-paper" aria-hidden="true"><img src="/nikahstudio/ornamen/jasmine.webp" alt=""/><i>The Wedding of</i><b>Alya &amp; Raka</b><img src="/nikahstudio/ornamen/rings.webp" alt=""/></div></section>
-            <div className="at-heading"><h2>Koleksi pilihan</h2><Link href={pages.templates[0]}>Semua template <ArrowRight/></Link></div>
-            <div className="at-grid">{templates.slice(0,4).map(t=><TemplateCard key={t.id} template={t}/>)}</div>
+            <section className="at-welcome">
+                <h1>Selamat datang, {owner}.</h1>
+                {recent && <span className="at-status">{recent.published?'Terbit':'Draf'}</span>}
+                <h2>{recent?.title ?? 'Undangan pertamamu'}</h2>
+                <p>{recent ? (recent.edited?'Terakhir diedit '+recent.edited:'Undangan terakhir dibuka') : 'Pilih template atau mulai dari halaman kosong.'}</p>
+                <Link className="at-resume" href={recent?path(recent.id):pages.create[0]}>{recent?'Lanjutkan edit':'Buat undangan'} <ArrowRight size={17}/></Link>
+            </section>
+            <div className="at-heading"><h2>{normalized?'Template yang cocok':'Jelajahi template'}</h2><Link href={pages.templates[0]}>Lihat semua <ArrowRight/></Link></div>
+            <div className="at-grid">{(normalized?filtered:featured.slice(0,4)).map(t=><TemplateCard key={t.id} template={t}/>)}</div>
+            {normalized && !filtered.length && <p>Template tidak ditemukan.</p>}
             <div className="at-heading"><h2>Lanjutkan mengedit</h2><Link href={pages.projects[0]}>Undangan saya <ArrowRight/></Link></div>
-            {invitations.length?<div className="at-projects">{invitations.slice(0,3).map(i=><ProjectCard key={i.id} project={i}/>)}</div>:<Link className="at-start" href={pages.create[0]}><Plus/> Buat undangan pertamamu <ArrowRight/></Link>}
+            {normalized && !projects.length?<p>Undangan tidak ditemukan.</p>:invitations.length?<div className="at-projects">{(normalized?projects:projects.slice(0,3)).map(i=><ProjectCard key={i.id} project={i}/>)}</div>:<Link className="at-start" href={pages.create[0]}><Plus/> Buat undangan pertamamu <ArrowRight/></Link>}
         </>}
         {screen==='templates'&&<><h1>Koleksi <em>template</em></h1><label className="at-search"><Search/><input type="search" placeholder="Cari nama template" aria-label="Cari nama template" value={query} onChange={e=>setQuery(e.target.value)}/></label>
             <div className="at-filters">{['Semua',...new Set(templates.map(t=>categories[t.category]??'Koleksi'))].map(f=><button key={f} aria-pressed={filter===f} onClick={()=>setFilter(f)}>{filter===f&&<Check size={14}/>} {f}</button>)}</div>

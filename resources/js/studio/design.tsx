@@ -1,12 +1,25 @@
-import { Circle, Diamond, Flower2, Minus, Sprout, Square, TreeDeciduous } from 'lucide-react';
+import { Heart, Star, Sparkles, Leaf, Clover, Sun, Moon, Shell, Crown, Mountain, Triangle, Hexagon, Circle, Diamond, Flower2, Minus, Sprout, Square, TreeDeciduous } from 'lucide-react';
 import { useRef } from 'react';
 import type { PointerEvent } from 'react';
 import './studio.css';
 import './atelier.css';
 import { backgrounds, illustrations, material } from './materials';
 
-export const motifs = { branch: [Sprout, 'Ranting'], tree: [TreeDeciduous, 'Pohon'], flower: [Flower2, 'Bunga'], diamond: [Diamond, 'Berlian'], circle: [Circle, 'Lingkaran'], square: [Square, 'Persegi'], line: [Minus, 'Garis'] } as const;
-export type Item = { id: string; type: 'text'|'shape'|'photo'|'illustration'; value: string; x:number; y:number; w:number; size:number; angle:number; color:string; font:string; frame:string };
+export const motifs = {
+    heart: [Heart, 'Hati'],
+    star: [Star, 'Bintang'],
+    sparkles: [Sparkles, 'Kilau'],
+    leaf: [Leaf, 'Daun'],
+    clover: [Clover, 'Semanggi'],
+    sun: [Sun, 'Matahari'],
+    moon: [Moon, 'Bulan'],
+    shell: [Shell, 'Kerang'],
+    crown: [Crown, 'Mahkota'],
+    mountain: [Mountain, 'Gunung'],
+    triangle: [Triangle, 'Segitiga'],
+    hexagon: [Hexagon, 'Segi enam'],
+    branch: [Sprout, 'Ranting'], tree: [TreeDeciduous, 'Pohon'], flower: [Flower2, 'Bunga'], diamond: [Diamond, 'Berlian'], circle: [Circle, 'Lingkaran'], square: [Square, 'Persegi'], line: [Minus, 'Garis'] } as const;
+export type Item = { id: string; type: 'text'|'shape'|'photo'|'illustration'; value: string; x:number; y:number; w:number; size:number; angle:number; color:string; font:string; frame:string; tint?:boolean; filled?:boolean };
 export type Section = { id:string; kind:string; label:string; bg:string; backdrop?:string|null; treatment?:string; items:Item[] };
 export const path = (id:number) => '/client/undangan/' + id;
 export async function api<T>(url:string, method:string, data:object):Promise<T> {
@@ -47,7 +60,7 @@ export function Canvas({ section, id, selected, pick, move }: {section:Section; 
             onPointerDown={e=>start(e,item)} onPointerMove={e=>{const d=drag.current;if(d && d.id===item.id)e.currentTarget.style.translate=(e.clientX-d.sx)+'px '+(e.clientY-d.sy)+'px';}}
             onPointerUp={e=>stop(e,true)} onPointerCancel={e=>stop(e,false)} onLostPointerCapture={e=>stop(e,false)}
             style={{left:item.x+'%',top:item.y+'%',width:item.w+'%',transform:'rotate('+item.angle+'deg)',color:item.color,fontFamily:item.font,fontSize:item.size+'cqw'}}>
-            {item.type==='illustration' && illustrations[item.value]?<img className="ns-illustration" draggable={false} alt="" src={material('ornamen',item.value)}/>:item.type==='photo'?<img src={'/foto-undangan/'+id+'/'+item.value} draggable={false} alt="Foto undangan" className={'frame-'+item.frame}/>:item.type==='shape'?<Icon strokeWidth={1.15} aria-hidden="true"/>:item.value}
+            {item.type==='illustration' && illustrations[item.value]?<span className="ns-art-layer" style={item.tint ? {backgroundColor:item.color,maskImage:'url('+material('ornamen',item.value)+')',WebkitMaskImage:'url('+material('ornamen',item.value)+')'} : undefined}><img style={{visibility:item.tint?'hidden':'visible'}} className="ns-illustration" draggable={false} alt="" src={material('ornamen',item.value)}/></span>:item.type==='photo'?<img src={'/foto-undangan/'+id+'/'+item.value} draggable={false} alt="Foto undangan" className={'frame-'+item.frame}/>:item.type==='shape'?<Icon fill={item.filled?"currentColor":"none"} strokeWidth={1.15} aria-hidden="true"/>:item.value}
         </div>;
     })}</div>;
 }
