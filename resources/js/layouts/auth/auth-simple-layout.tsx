@@ -10,7 +10,7 @@ export default function AuthSimpleLayout({ title, description, children }: Props
             <aside className="nikah-cover">
                 <div className="nikah-brand"><span aria-hidden="true">N</span>NikahStudio</div>
            <p className="nikah-caption" lang="en">
-    Digital wedding invitatio
+    Digital wedding invitation
 </p>
             </aside>
             <section className="nikah-panel">
