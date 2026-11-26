@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvitationStudioController;
 use App\Http\Middleware\EnsureUserHasRole;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -17,9 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware(EnsureUserHasRole::class . ':admin')
         ->name('admin.dashboard');
 
-    Route::get('/client/dashboard', [DashboardController::class, 'show'])
+    Route::get('/client/dashboard', [InvitationStudioController::class, 'index'])
         ->middleware(EnsureUserHasRole::class . ':client')
         ->name('client.dashboard');
 });
 
 require __DIR__ . '/settings.php';
+require __DIR__ . '/invitation-studio.php';

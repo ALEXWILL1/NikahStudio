@@ -1,0 +1,73 @@
+.ns { --paper:#fcf8ef; --ink:#3c2b23; --muted:#706155; --line:#ded2bd; --sage:#556844; color-scheme:light; min-height:100svh; background:var(--paper); color:var(--ink); font:15px/1.5 system-ui,sans-serif; }
+.ns * {box-sizing:border-box}
+.ns button,.ns .ns-upload {display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:1px solid var(--line);border-radius:10px;background:#fffdf8;color:var(--ink);cursor:pointer;padding:.55rem .85rem;font:inherit}
+.ns button:disabled {opacity:.48;cursor:default}
+.ns button:not(:disabled):hover,.ns a:hover {filter:brightness(.91)}
+.ns :focus-visible {outline:3px solid #998346;outline-offset:3px}
+.ns a {color:inherit;text-decoration:underline;text-underline-offset:3px}
+.ns small {color:var(--muted)}
+.ns button svg,.ns a svg,.ns-upload svg {width:19px;height:19px;flex-shrink:0}
+.ns h1,.ns h2,.ns h3 {font-family:Georgia,serif;font-weight:normal;line-height:1.12}
+.ns h2 {font-size:clamp(1.7rem,3vw,2.5rem)}
+.ns h3 {font-size:1.35rem}
+.ns label {display:grid;gap:.35rem;font-size:.85rem;color:#544237}
+.ns input:not([type=file]),.ns textarea,.ns select {color:#39291f;background:#fffdf9;border:1px solid #c8b8a3;border-radius:8px;padding:.55rem;width:100%;font:inherit}
+.ns input[type=color] {height:2.4rem;padding:.2rem}
+.ns input[type=range] {padding:0;accent-color:#704b31}
+.ns .primary {background:#5a3928;border-color:#5a3928;color:#fff8e9}
+.ns-home {display:grid;grid-template-columns:190px minmax(0,1fr)}
+.ns-home.compact {grid-template-columns:72px minmax(0,1fr)}
+.ns-side {background:#392921;color:#fff4df;display:flex;flex-direction:column;gap:1rem;padding:1.2rem .9rem;position:sticky;top:0;height:100svh}
+.ns-side strong,.ns-bar strong {font:1.45rem Georgia,serif}
+.ns-side a,.ns-side button {display:flex;align-items:center;justify-content:flex-start;gap:.65rem;color:#f9e9d6;text-decoration:none;background:transparent;border:0;padding:.5rem}
+.compact .ns-side span {display:none}
+.ns-main {padding:clamp(1rem,3vw,3rem);min-width:0;max-width:1540px;width:100%;margin:auto}
+.ns-hero {border-radius:20px;overflow:hidden;min-height:220px;display:flex;align-items:center;padding:clamp(1.5rem,4vw,4rem);color:#fff7e7;background:linear-gradient(94deg,#34251ef5 12%,#3c2b22a8 52%,transparent),url('../layouts/auth/wedding.png') center 55%/cover}
+.ns-hero small {color:#f0d299;letter-spacing:.17em}.ns-hero h1 {font-size:clamp(2.6rem,5vw,5rem);margin:.5rem 0}.ns-hero button {margin-top:1rem}
+.ns-heading {display:flex;align-items:baseline;justify-content:space-between;margin:2.3rem 0 1rem}
+.ns-empty {padding:1.3rem;border:1px dashed #c6b398;border-radius:12px;color:var(--muted)}
+.ns-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr));gap:1rem}
+.ns .ns-card {display:block;overflow:hidden;text-align:left;padding:0;background:#fffdf8;border:1px solid var(--line);border-radius:15px}
+.ns-card>div:last-child:not(.ns-thumb) {padding:1rem}
+.ns-card h3 {margin:.3rem 0}
+.ns-thumb {max-height:240px;overflow:hidden;background:#ece3d4;display:grid;place-items:center;padding:.8rem}
+.ns-thumb .ns-canvas {width:min(100%,154px);box-shadow:0 2px 10px #38271424}
+.ns-preview-thumb {width:130px;margin:.5rem auto}
+.ns .ns-dialog[open] {display:block;position:fixed;inset:0;margin:auto;background:#fffaf2;color:var(--ink);width:min(92vw,400px);height:fit-content;max-height:90svh;overflow:auto;border:1px solid var(--line);border-radius:16px;padding:1.5rem;z-index:10;box-shadow:0 24px 60px #22180f40}
+.ns-dialog h2 {padding-right:2rem}
+.ns-close {position:absolute;right:.65rem;top:.65rem}
+.ns form {display:grid;gap:.9rem}
+.ns-bar,.ns-notice {display:flex;flex-wrap:wrap;align-items:center;gap:.65rem;background:#fffaf3;padding:.8rem 1.25rem;border-bottom:1px solid var(--line)}
+.ns-bar small {margin-right:auto}
+.ns-notice {background:#eef0e4}
+.ns-work {display:grid;grid-template-columns:minmax(162px,215px) minmax(0,1fr) minmax(165px,240px);align-items:start;min-height:85vh}
+.ns-tools {display:grid;gap:.65rem;padding:1rem;min-width:0}
+.ns-tools h3 {margin:.7rem 0 .1rem}
+.ns-tools .active {background:#e6eadb;border-color:#8b9979;color:#32482d}
+.ns-actions,.ns-motifs,.ns-photos {display:flex;gap:.35rem;flex-wrap:wrap}
+.ns .ns-photos button {padding:0;overflow:hidden}
+.ns-photos img {width:42px;height:42px;object-fit:cover}
+.ns-upload {position:relative;overflow:hidden}
+.ns-upload input {position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+.ns-artboard {background:#eae3d7;padding:1.2rem clamp(.8rem,2.8vw,3.5rem) 3rem;display:grid;justify-items:center;align-content:start;min-height:85vh}
+.ns-artboard>small {margin-bottom:.85rem}
+.ns-canvas {position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;container-type:inline-size;isolation:isolate}
+.ns-artboard>.ns-canvas {max-width:540px;box-shadow:0 8px 32px #4e382326}
+.ns-item {position:absolute;text-align:center;line-height:1.18;white-space:pre-wrap;overflow-wrap:anywhere;min-height:1em}
+.ns-item.editable {cursor:grab;touch-action:none;user-select:none}
+.ns-item.chosen {outline:1.5px dashed #566f64;outline-offset:2px}
+.ns .ns-item svg {width:100%;height:auto;display:block}
+.ns-item img {display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.ns-item .frame-soft {border-radius:8%}
+.ns-item .frame-arch {aspect-ratio:3/4;border-radius:50% 50% 0 0}
+.ns-item .frame-round {aspect-ratio:1;border-radius:50%}
+.ns-phone {width:min(100%,390px);margin:1.4rem auto;box-shadow:0 3px 24px #38261529}
+.ns-guest {background:#e9e2d5;padding:0 .75rem}
+.ns-guest>div {max-width:680px;margin:auto;box-shadow:0 0 36px #51341f17}
+.ns-rsvp,.ns-guest footer {padding:1.5rem;background:#fcf7ec}
+.ns-guest footer {text-align:center;color:#635547}
+@media(max-width:850px){.ns-work {grid-template-columns:155px minmax(0,1fr)}.ns-work>.ns-tools:last-child {grid-column:1/-1;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));align-items:end}.ns-artboard {min-height:60vh}}
+@media(max-width:640px){.ns-home,.ns-home.compact {grid-template-columns:minmax(0,1fr)}.ns-side {position:static;height:auto;flex-direction:row;align-items:center;justify-content:space-between;padding:.65rem}.ns-side span,.ns-side button {display:none}.ns-bar {padding:.5rem;gap:.35rem}.ns-bar button {font-size:.8rem}.ns-work {display:flex;flex-direction:column}.ns-tools,.ns-artboard {width:100%}.ns-artboard {order:-1;min-height:auto;padding:.75rem}.ns-artboard>.ns-canvas {max-width:310px}.ns-tools {grid-template-columns:repeat(2,minmax(0,1fr))}.ns-tools h3 {grid-column:1/-1}.ns-guest {padding:0}.ns-grid {grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.ns-dialog::backdrop { background: #22180f70; }
+@media(max-width:640px){.ns-side a span,.ns-side button span {display:none}.ns-side button[title="Keluar"] {display:flex}}
